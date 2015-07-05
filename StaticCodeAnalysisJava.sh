@@ -2,23 +2,34 @@
 
 function checkForCurrentTimeMillis()
 {
-  match=$( grep -Hin "currentTimeMillis" $1 )
-  #echo "$match"
-  if [ "${match}" ]
+  matchCTM=$( grep -Hn "currentTimeMillis" $1 )
+  if [ "${matchCTM}" ]
   then
     echo "Consider using System.nanoTime instead of System.currentTimeMillis (EffectiveJava:276)"
-    echo ">>> $match"
+    echo "$matchCTM"
     echo ""
    fi
 }
 
+function checkSuppressWarnings()
+{
+  matchSW=$( grep -Hin "SuppressWarnings.*unchecked" $1)
+  if [ "${matchSW}" ]
+  then
+    echo "Eliminate every unchecked warning that you can (EffectiveJava:116)"
+    echo "$matchSW"
+    echo ""
+  fi
+}
+
+### Main Programs starts here ###
 
 JavaFiles=$( find . -iname "*.java" )
 
-# Analyzing Java files
+# Analyzing .java files
 while read File
 do
-# echo "Checking for usage of System.currentTimeMillis..."
   checkForCurrentTimeMillis "$File"
+  checkSuppressWarnings "$File"
 done <<< "$JavaFiles"
 
