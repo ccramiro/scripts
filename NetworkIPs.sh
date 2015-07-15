@@ -7,7 +7,7 @@ is_alive_ping()
 }
 
 # Could be generalized with output from ifconfig
-for i in 192.168.0.{1..255} 
+for i in 192.168.0.{1..254} 
 do
   is_alive_ping $i & disown
 done
